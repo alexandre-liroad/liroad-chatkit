@@ -2,6 +2,7 @@ import { WORKFLOW_ID } from "@/lib/config";
 
 export const runtime = "edge";
 
+// Init session with custom params
 interface CreateSessionRequestBody {
   workflow?: { id?: string | null } | null;
   scope?: { user_id?: string | null } | null;
@@ -11,6 +12,8 @@ interface CreateSessionRequestBody {
       enabled?: boolean;
     };
   };
+  user_name?: string | null;
+  meeting_id?: string | null;
 }
 
 const DEFAULT_CHATKIT_BASE = "https://api.openai.com";
@@ -43,6 +46,20 @@ export async function POST(request: Request): Promise<Response> {
     const resolvedWorkflowId =
       parsedBody?.workflow?.id ?? parsedBody?.workflowId ?? WORKFLOW_ID;
 
+    // Get params from frontend
+    const userName = parsedBody?.user_name ?? null;
+    const meetingId = parsedBody?.meeting_id ?? null;
+
+    // Set state_variables for the workflow
+    const stateVariables: Record<string, string | number | boolean> = {};
+
+    if (userName) {
+      stateVariables.user_name = userName;
+    }
+    if (meetingId) {
+      stateVariables.meeting_id = meetingId;
+    }
+
     if (process.env.NODE_ENV !== "production") {
       console.info("[create-session] handling request", {
         resolvedWorkflowId,
@@ -69,7 +86,10 @@ export async function POST(request: Request): Promise<Response> {
         "OpenAI-Beta": "chatkit_beta=v1",
       },
       body: JSON.stringify({
-        workflow: { id: resolvedWorkflowId },
+        workflow: { 
+          id: resolvedWorkflowId,
+          state_variables: stateVariables,
+       },
         user: userId,
         chatkit_configuration: {
           file_upload: {
