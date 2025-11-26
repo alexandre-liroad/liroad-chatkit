@@ -2,6 +2,19 @@ import { WORKFLOW_ID } from "@/lib/config";
 
 export const runtime = "edge";
 
+
+useEffect(() => {
+  const url = new URL(window.location.href);
+  const user_name = url.searchParams.get("user_name");
+  const meeting_id = url.searchParams.get("meeting_id");
+
+  console.log("👉 Param user_name :", user_name);
+  console.log("👉 Param meeting_id :", meeting_id);
+
+  setParams({ user_name, meeting_id });
+}, []);
+
+
 // Init session with custom params
 interface CreateSessionRequestBody {
   workflow?: { id?: string | null } | null;
