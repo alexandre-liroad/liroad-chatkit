@@ -19,11 +19,17 @@ export type FactAction = {
   factText: string;
 };
 
+type SessionParams = {
+  user_name?: string | null;
+  meeting_id?: string | null;
+};
+
 type ChatKitPanelProps = {
   theme: ColorScheme;
   onWidgetAction: (action: FactAction) => Promise<void>;
   onResponseEnd: () => void;
   onThemeRequest: (scheme: ColorScheme) => void;
+  sessionParams?: SessionParams;
 };
 
 type ErrorState = {
@@ -48,6 +54,7 @@ export function ChatKitPanel({
   onWidgetAction,
   onResponseEnd,
   onThemeRequest,
+  sessionParams,
 }: ChatKitPanelProps) {
   const processedFacts = useRef(new Set<string>());
   const [errors, setErrors] = useState<ErrorState>(() => createInitialErrors());
@@ -198,6 +205,8 @@ export function ChatKitPanel({
                 enabled: true,
               },
             },
+            user_name: sessionParams?.user_name ?? null,
+            meeting_id: sessionParams?.meeting_id ?? null,
           }),
         });
 
