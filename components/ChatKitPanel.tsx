@@ -293,8 +293,24 @@ export function ChatKitPanel({
 
 
 
-    //TEST COMMENT HERE
-    
+    // DLU - ADD HERE WIDGET ACTION HANDLER 
+   
+     widgets: {
+    async onAction(action, widgetItem) {
+      // Catch only your custom click
+      if (action.type === "view") {
+        // send to parent window
+        window.parent.postMessage(
+          {
+            type: "CHATKIT_SELECT_MESSAGE",
+            payload: action.payload,
+          },
+          "*" // you can tighten this to an exact origin
+        );
+      }
+    },
+  },
+
 
 
     onClientTool: async (invocation: {
