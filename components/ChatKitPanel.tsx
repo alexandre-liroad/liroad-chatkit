@@ -298,7 +298,7 @@ export function ChatKitPanel({
      widgets: {
     async onAction(action, widgetItem) {
       // Catch only your custom click
-      if (action.type === "view") {
+      if (action.type === "job.selected") {
         // send to parent window
         window.parent.postMessage(
           {
