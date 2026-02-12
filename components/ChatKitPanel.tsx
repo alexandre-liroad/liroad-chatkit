@@ -293,19 +293,18 @@ export function ChatKitPanel({
 
 
 
-    // DLU - ADD HERE WIDGET ACTION HANDLER 
-   
-     widgets: {
+    // DLU - WIDGET ACTION HANDLER
+  widgets: {
     async onAction(action, widgetItem) {
       // Catch only your custom click
       if (action.type === "job.selected") {
         // send to parent window
         window.parent.postMessage(
           {
-            type: "CHATKIT_SELECT_MESSAGE",
+            type: "LIROAD_SHOW_JOB_AD",
             payload: action.payload,
           },
-          "*" // you can tighten this to an exact origin
+          "*" 
         );
       }
     },
